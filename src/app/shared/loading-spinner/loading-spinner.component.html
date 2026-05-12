@@ -1,0 +1,5 @@
+<div class="spinner-wrapper" [class.spinner-wrapper--overlay]="variant === 'overlay'" role="status" aria-live="polite">
+  <div class="spinner-ring" [style]="ringStyle" aria-hidden="true"></div>
+  <span class="spinner-label" *ngIf="label">{{ label }}</span>
+  <span class="sr-only">{{ label || 'Loading' }}</span>
+</div>

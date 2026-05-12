@@ -1,0 +1,166 @@
+<div class="table-card">
+  <header class="table-card__header">
+    <div>
+      <h2 class="table-card__title">Users</h2>
+      <p class="table-card__subtitle">
+        Showing {{ displayRangeStart }}–{{ displayRangeEnd }} of
+        {{ filteredUsers.length }}
+        <span *ngIf="filteredUsers.length !== users.length">
+          (filtered from {{ users.length }})
+        </span>
+      </p>
+    </div>
+
+    <div class="table-card__controls">
+      <div class="control-group">
+        <label class="sr-only" for="user-search">Search users</label>
+        <div class="search">
+          <svg
+            class="search__icon"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+            <path
+              d="M20 20L17 17"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <input
+            id="user-search"
+            type="search"
+            class="input search__input"
+            placeholder="Search by name, email or role"
+            [ngModel]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="sr-only" for="role-filter">Filter by role</label>
+        <select
+          id="role-filter"
+          class="select"
+          [ngModel]="roleFilter"
+          (ngModelChange)="onRoleFilterChange($event)"
+        >
+          <option value="all">All roles</option>
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+      </div>
+
+      <button
+        *ngIf="searchTerm || roleFilter !== 'all'"
+        type="button"
+        class="btn btn--ghost table-card__clear"
+        (click)="clearFilters()"
+      >
+        Clear
+      </button>
+    </div>
+  </header>
+
+  <div class="table-card__scroll">
+    <table class="table" aria-label="Users">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let user of pagedUsers; trackBy: trackByUserId"
+          [class.table__row--new]="user.id === newestUserId"
+        >
+          <td>
+            <div class="user-cell">
+              <span class="user-cell__avatar" [attr.data-role]="user.role">
+                {{ user.name.charAt(0).toUpperCase() }}
+              </span>
+              <span class="user-cell__name">{{ user.name }}</span>
+            </div>
+          </td>
+          <td>
+            <a class="table__email" [href]="'mailto:' + user.email">{{ user.email }}</a>
+          </td>
+          <td>
+            <span [class]="roleClass(user.role)">{{ user.role }}</span>
+          </td>
+        </tr>
+
+        <tr *ngIf="filteredUsers.length === 0">
+          <td colspan="3" class="table__empty">
+            <ng-container *ngIf="users.length === 0; else noMatches">
+              No users yet. Click <strong>Add user</strong> to get started.
+            </ng-container>
+            <ng-template #noMatches>
+              No users match the current filters.
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="table-card__footer" *ngIf="filteredUsers.length > 0">
+    <div class="page-size">
+      <label for="page-size">Rows per page</label>
+      <select
+        id="page-size"
+        class="select page-size__select"
+        [ngModel]="pageSize"
+        (ngModelChange)="onPageSizeChange($event)"
+      >
+        <option *ngFor="let opt of pageSizeOptions" [ngValue]="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <nav class="pager" aria-label="Table pagination">
+      <button
+        type="button"
+        class="pager__btn"
+        (click)="prevPage()"
+        [disabled]="pageIndex === 0"
+        aria-label="Previous page"
+      >
+        ‹
+      </button>
+
+      <ng-container *ngFor="let p of pageRange; let i = index">
+        <span
+          *ngIf="isElided(p, i, pageRange)"
+          class="pager__ellipsis"
+          aria-hidden="true"
+        >…</span>
+        <button
+          type="button"
+          class="pager__btn"
+          [class.pager__btn--active]="p === pageIndex"
+          (click)="goToPage(p)"
+          [attr.aria-current]="p === pageIndex ? 'page' : null"
+        >
+          {{ p + 1 }}
+        </button>
+      </ng-container>
+
+      <button
+        type="button"
+        class="pager__btn"
+        (click)="nextPage()"
+        [disabled]="pageIndex >= pageCount - 1"
+        aria-label="Next page"
+      >
+        ›
+      </button>
+    </nav>
+  </footer>
+</div>

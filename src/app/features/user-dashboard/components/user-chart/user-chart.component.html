@@ -1,0 +1,37 @@
+<div class="chart-card">
+  <header class="chart-card__header">
+    <div>
+      <h2 class="chart-card__title">Role distribution</h2>
+      <p class="chart-card__subtitle">Live breakdown of users by assigned role.</p>
+    </div>
+    <span class="chart-card__total" *ngIf="!isLoading && !hasError">
+      <strong>{{ total }}</strong>
+      <span>total</span>
+    </span>
+  </header>
+
+  <div class="chart-card__canvas-wrap">
+    <canvas
+      #chartCanvas
+      role="img"
+      aria-label="Pie chart showing distribution of users by role"
+    ></canvas>
+
+    <app-loading-spinner
+      *ngIf="isLoading"
+      variant="overlay"
+      label="Loading chart…"
+      [size]="36"
+    ></app-loading-spinner>
+
+    <div class="chart-card__error" *ngIf="hasError" role="alert">
+      <p>Unable to load the chart library.</p>
+      <p class="chart-card__error-hint">Please check your connection and refresh.</p>
+    </div>
+
+    <div class="chart-card__empty" *ngIf="!isLoading && !hasError && total === 0">
+      <p>No users yet.</p>
+      <p class="chart-card__empty-hint">Add your first user to see the distribution.</p>
+    </div>
+  </div>
+</div>

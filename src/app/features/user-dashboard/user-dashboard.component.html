@@ -1,0 +1,89 @@
+<section class="dashboard">
+  <header class="dashboard__header">
+    <div class="dashboard__title-block">
+      <h1 class="dashboard__title">User Dashboard</h1>
+      <p class="dashboard__subtitle">
+        Manage your team members and see role distribution at a glance.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn--primary dashboard__add-btn"
+      (click)="openAddUserModal()"
+      [disabled]="isFormLoading || isFormOpen"
+    >
+      <span class="spinner" *ngIf="isFormLoading" aria-hidden="true"></span>
+      <svg
+        *ngIf="!isFormLoading"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M12 5V19M5 12H19"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+      <span>{{ isFormLoading ? 'Loading…' : 'Add user' }}</span>
+    </button>
+  </header>
+
+  <div
+    class="dashboard__toast"
+    *ngIf="recentlyAddedName"
+    role="status"
+    aria-live="polite"
+  >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 13L9 17L19 7"
+        stroke="currentColor"
+        stroke-width="2.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <span><strong>{{ recentlyAddedName }}</strong> was added successfully.</span>
+  </div>
+
+  <div class="dashboard__stats">
+    <div class="stat-card">
+      <span class="stat-card__label">Total users</span>
+      <span class="stat-card__value">{{ totalUsers }}</span>
+    </div>
+    <ng-container *ngIf="distribution$ | async as dist">
+      <div class="stat-card stat-card--admin">
+        <span class="stat-card__label">Admins</span>
+        <span class="stat-card__value">{{ dist.Admin }}</span>
+      </div>
+      <div class="stat-card stat-card--editor">
+        <span class="stat-card__label">Editors</span>
+        <span class="stat-card__value">{{ dist.Editor }}</span>
+      </div>
+      <div class="stat-card stat-card--viewer">
+        <span class="stat-card__label">Viewers</span>
+        <span class="stat-card__value">{{ dist.Viewer }}</span>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="dashboard__grid">
+    <app-user-table
+      class="dashboard__table"
+      [users]="(users$ | async) ?? []"
+    ></app-user-table>
+
+    <app-user-chart
+      class="dashboard__chart"
+      [distribution]="(distribution$ | async) ?? { Admin: 0, Editor: 0, Viewer: 0 }"
+    ></app-user-chart>
+  </div>
+
+  <!-- ViewContainerRef anchor for the lazy-loaded UserFormComponent. -->
+  <ng-container #formHost></ng-container>
+</section>

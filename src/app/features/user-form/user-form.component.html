@@ -1,0 +1,114 @@
+<div
+  class="modal-backdrop"
+  (click)="onBackdropClick($event)"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="user-form-title"
+>
+  <div class="modal" role="document">
+    <header class="modal__header">
+      <div>
+        <h2 id="user-form-title" class="modal__title">Add new user</h2>
+        <p class="modal__subtitle">Fill in the details below. All fields are required.</p>
+      </div>
+      <button
+        type="button"
+        class="modal__close"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+        aria-label="Close add user form"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M6 6L18 18M6 18L18 6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    </header>
+
+    <form class="modal__body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="field">
+        <label class="field__label" for="user-name">Name</label>
+        <input
+          id="user-name"
+          type="text"
+          class="input"
+          [class.is-invalid]="showError(nameCtrl)"
+          formControlName="name"
+          placeholder="e.g. Priya Patel"
+          autocomplete="name"
+          maxlength="60"
+        />
+        <p class="field__error" *ngIf="showError(nameCtrl)">
+          <ng-container *ngIf="nameCtrl.errors?.['required']">Name is required.</ng-container>
+          <ng-container *ngIf="nameCtrl.errors?.['minlength']">
+            Name must be at least 2 characters.
+          </ng-container>
+          <ng-container *ngIf="nameCtrl.errors?.['whitespace']">
+            Name cannot be only whitespace.
+          </ng-container>
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="user-email">Email</label>
+        <input
+          id="user-email"
+          type="email"
+          class="input"
+          [class.is-invalid]="showError(emailCtrl)"
+          formControlName="email"
+          placeholder="name@company.com"
+          autocomplete="email"
+          maxlength="120"
+        />
+        <p class="field__error" *ngIf="showError(emailCtrl)">
+          <ng-container *ngIf="emailCtrl.errors?.['required']">Email is required.</ng-container>
+          <ng-container *ngIf="emailCtrl.errors?.['email']">
+            Please enter a valid email address.
+          </ng-container>
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="user-role">Role</label>
+        <select
+          id="user-role"
+          class="select"
+          [class.is-invalid]="showError(roleCtrl)"
+          formControlName="role"
+        >
+          <option value="" disabled>Select a role</option>
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+        <p class="field__error" *ngIf="showError(roleCtrl)">
+          <ng-container *ngIf="roleCtrl.errors?.['required'] || roleCtrl.errors?.['invalidRole']">
+            Please select a valid role.
+          </ng-container>
+        </p>
+      </div>
+
+      <footer class="modal__footer">
+        <button
+          type="button"
+          class="btn btn--secondary"
+          (click)="onCancel()"
+          [disabled]="isSubmitting"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn--primary"
+          [disabled]="form.invalid || isSubmitting"
+        >
+          <span class="spinner" *ngIf="isSubmitting" aria-hidden="true"></span>
+          <span>{{ isSubmitting ? 'Saving…' : 'Add user' }}</span>
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>
