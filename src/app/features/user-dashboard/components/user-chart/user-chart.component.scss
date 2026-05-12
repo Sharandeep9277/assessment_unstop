@@ -89,3 +89,56 @@
 canvas {
   max-width: 100%;
 }
+
+/* --------------------------- responsive --------------------------- */
+
+@media (max-width: 900px) {
+  .chart-card {
+    min-height: 320px;
+    padding: 18px;
+
+    &__canvas-wrap {
+      min-height: 240px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .chart-card {
+    min-height: 300px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+
+    &__title {
+      font-size: 15px;
+    }
+
+    &__subtitle {
+      font-size: 12px;
+    }
+
+    &__total {
+      strong {
+        font-size: 20px;
+      }
+    }
+
+    &__canvas-wrap {
+      min-height: 220px;
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .chart-card {
+    padding: 14px;
+
+    &__header {
+      gap: 8px;
+    }
+
+    &__canvas-wrap {
+      min-height: 200px;
+    }
+  }
+}

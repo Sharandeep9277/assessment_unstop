@@ -140,15 +140,66 @@
   }
 }
 
-@media (max-width: 540px) {
-  .modal {
-    max-width: 100%;
+/* --------------------------- responsive --------------------------- */
+
+/* md — phones: convert centered modal into a bottom-sheet style for better
+   one-handed reach. Header / footer get tighter side padding. */
+@media (max-width: 640px) {
+  .modal-backdrop {
+    padding: 0;
+    align-items: flex-end;
   }
 
-  .modal__header,
-  .modal__body,
+  .modal {
+    max-width: 100%;
+    width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    animation: sheet-rise 280ms cubic-bezier(0.21, 1.02, 0.73, 1);
+    max-height: 92vh;
+    overflow-y: auto;
+
+    &__header {
+      padding: 20px 18px 12px;
+    }
+
+    &__title {
+      font-size: 17px;
+    }
+
+    &__body {
+      padding: 16px 18px 4px;
+      gap: 14px;
+    }
+
+    &__footer {
+      padding: 14px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+      gap: 10px;
+    }
+  }
+
+  .field__label {
+    font-size: 12.5px;
+  }
+}
+
+/* sm — very small phones: stack the footer buttons full-width for easy tap */
+@media (max-width: 400px) {
   .modal__footer {
-    padding-left: 18px;
-    padding-right: 18px;
+    flex-direction: column-reverse;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+@keyframes sheet-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

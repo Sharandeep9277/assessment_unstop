@@ -5,6 +5,11 @@
      - Neutral:   #383838  (charcoal)
    Sizing:
      - Buttons / Inputs: 48px height
+   Breakpoints used app-wide (mobile-first cascade):
+     - sm:   ≤ 480px   small phones
+     - md:   ≤ 640px   phones (default mobile)
+     - lg:   ≤ 900px   small tablets / large phones (landscape)
+     - xl:   ≤ 1024px  tablets / small laptops
    ========================================================================== */
 
 :root {
@@ -183,4 +188,19 @@ textarea {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* --- Responsive primitives ---
+   At ≤640px we bump the form-control font size to 16px. This is the threshold
+   below which iOS Safari auto-zooms a page when an input receives focus —
+   bumping the inline size avoids the unwanted zoom while keeping the visual
+   weight identical at this breakpoint (the box is still 48px tall).
+*/
+@media (max-width: 640px) {
+  .input,
+  .select,
+  input.input,
+  select.select {
+    font-size: 16px;
+  }
 }

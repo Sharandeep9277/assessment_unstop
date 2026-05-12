@@ -277,16 +277,175 @@
   }
 }
 
-@media (max-width: 640px) {
+/* --------------------------- responsive --------------------------- */
+
+/* xl — small tablets: controls allowed to flow on their own line */
+@media (max-width: 1024px) {
   .table-card__header {
+    flex-direction: column;
     align-items: stretch;
+    gap: 14px;
+  }
+
+  .table-card__controls {
+    width: 100%;
+    flex-wrap: wrap;
   }
 
   .control-group {
-    width: 100%;
+    flex: 1 1 220px;
+    width: auto;
+  }
+}
+
+/* lg — landscape phones / small tablets */
+@media (max-width: 900px) {
+  .table {
+    thead th,
+    tbody td {
+      padding: 12px 16px;
+    }
   }
 
   .table-card__footer {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+}
+
+/* md — phones: convert each row into a stacked "card" using CSS grid.
+   This keeps semantic <table> markup while giving phones a clean two-line
+   layout: avatar + name on the first line, email on the second, role pill
+   floated to the right. */
+@media (max-width: 640px) {
+  .table-card {
+    min-height: 320px;
+    border-radius: var(--radius-md);
+  }
+
+  .table-card__header {
+    padding: 14px 16px;
+  }
+
+  .table-card__title {
+    font-size: 15px;
+  }
+
+  .table-card__controls {
+    gap: 8px;
+  }
+
+  .control-group {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .table-card__clear {
+    flex: 0 0 auto;
+  }
+
+  /* Hide the thead row (we still keep it in DOM for screen readers — visually
+     hidden via clip-path; data-label attrs convey context). */
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .table tbody tr.table__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name role'
+      'email email';
+    gap: 6px 10px;
+    padding: 14px 16px;
+    align-items: center;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .table tbody tr.table__row td {
+    padding: 0;
+    border: none;
+  }
+
+  .table__cell--name {
+    grid-area: name;
+    min-width: 0;
+  }
+
+  .table__cell--email {
+    grid-area: email;
+    min-width: 0;
+  }
+
+  .table__cell--role {
+    grid-area: role;
+    justify-self: end;
+  }
+
+  .table__email {
+    color: var(--color-neutral-500);
+    font-size: 12.5px;
+    display: inline-block;
+    padding-left: 44px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .user-cell__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .table tbody tr.table__empty-row {
+    display: block;
+
+    td {
+      padding: 28px 16px !important;
+      border: none;
+    }
+  }
+
+  .table-card__footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 16px 14px;
+  }
+
+  .page-size {
+    justify-content: space-between;
+  }
+
+  .pager {
     justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+/* sm — very small phones: pager shows only prev / current / next */
+@media (max-width: 400px) {
+  .table-card__header {
+    padding: 12px 14px;
+  }
+
+  .table tbody tr.table__row {
+    padding: 12px 14px;
+  }
+
+  .pager__btn:not(:first-child):not(:last-child):not(.pager__btn--active),
+  .pager__ellipsis {
+    display: none;
   }
 }
